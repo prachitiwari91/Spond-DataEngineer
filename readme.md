@@ -20,6 +20,65 @@ src/
 
 ---
 
+## How to Run
+
+### Prerequisites
+
+- PySpark and Databricks environment
+- Delta Lake enabled
+- JDBC config and secrets set up using Databricks secrets
+- Mentioned databases already created
+- CSV files are kept at the S3 location.
+
+### Step-by-Step
+
+1. **Clone the repository**
+
+2. **Set Job Parameters**
+   In each notebook/script, configure:
+   ```python
+   env = "dev"
+   src_db = "src_db"
+   tgt_db = "spond_raw"  # or clean/analytics depending on the layer
+   ```
+
+3. **Run Notebooks in Order**
+
+   - `1_raw/raw_load.py`
+   - `2_clean/{teams.py, membership.py, events.py, event_rsvps.py}`
+   - `3_dim/dim_load.py`
+   - `4_fact/fact_event_rsvp.py`
+   - `5_fact/fact_event_enriched.py`
+
+4. **(Optional) Define Airflow DAG**  
+   See `dag/spond_ingestion_pipeline.py` for orchestration planning.
+
+---
+
+## Sample Queries
+
+Example:
+```sql
+-- Daily Active Team
+SELECT
+event_start::date as event_date,count(distinct team_id) as active_teams
+FROM spond_analytics.v_d_events
+group by event_date;
+```
+
+---
+
+## Tests
+
+Sample Unit tests are defined in:
+- `1_raw/test_raw.py`
+- `3_dim/test_dim.py`
+- `4_fact/test_fact.py`
+
+(Extend these with `pytest` or `unittest` for local CI.)
+
+---
+
 ### Layered Architecture
 
 ```
@@ -253,66 +312,6 @@ This view provides enriched event data combining event metadata with RSVP summar
 | `responded_members`     | bigint         | Number of members who responded                              |
 | `event_attendance_rate` | decimal(27,2)  | Percentage of accepted RSVPs vs total RSVPs                  |
 | `etl_created_date`    | timestamp | Timestamp when the record was created in the ETL process      |
-
----
-
-
-## How to Run
-
-### Prerequisites
-
-- PySpark / Databricks environment
-- Delta Lake enabled
-- JDBC config and secrets set up using Databricks secrets
-- Mentioned databases already created
-- CSV files are kept at the s3 location.
-
-### Step-by-Step
-
-1. **Clone the repository**
-
-2. **Set Job Parameters**
-   In each notebook/script, configure:
-   ```python
-   env = "dev"
-   src_db = "src_db"
-   tgt_db = "spond_raw"  # or clean/analytics depending on the layer
-   ```
-
-3. **Run Notebooks in Order**
-
-   - `1_raw/raw_load.py`
-   - `2_clean/{teams.py, membership.py, events.py, event_rsvps.py}`
-   - `3_dim/dim_load.py`
-   - `4_fact/fact_event_rsvp.py`
-   - `5_fact/fact_event_enriched.py`
-
-4. **(Optional) Define Airflow DAG**  
-   See `dag/spond_ingestion_pipeline.py` for orchestration planning.
-
----
-
-## Sample Queries
-
-Example:
-```sql
--- Daily Active Team
-SELECT
-event_start::date as event_date,count(distinct team_id) as active_teams
-FROM spond_analytics.v_d_events
-group by event_date;
-```
-
----
-
-## Tests
-
-Sample Unit tests are defined in:
-- `1_raw/test_raw.py`
-- `3_dim/test_dim.py`
-- `4_fact/test_fact.py`
-
-(Extend these with `pytest` or `unittest` for local CI.)
 
 ---
 
