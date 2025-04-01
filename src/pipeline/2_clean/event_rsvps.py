@@ -4,7 +4,6 @@ from pyspark.sql import Window
 
 # COMMAND ----------
 
-# DBTITLE 1,able
 # TODO : Define as Databricks job parameters
 env= 'dev'
 src_db='spond_raw'

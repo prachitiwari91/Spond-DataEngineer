@@ -3,7 +3,7 @@ from pyspark.sql import functions as F, types as T
 
 # COMMAND ----------
 
-env= 'dev'
+env='dev'
 src_db='spond_raw'
 tgt_db='spond_clean'
 partition_start_date = '2024-01-01' # Yesterday_date()
@@ -31,6 +31,9 @@ def add_validation_error_columns(df):
     )
     )
 
+def select_input_columns(df):
+  return df.select("TEAM_ID", F.col("GROUP_ACTIVITY").alias("TEAM_ACTIVITY"), "COUNTRY_CODE", "CREATED_AT", "P_DATE")
+
 
 # COMMAND ----------
 
@@ -39,6 +42,7 @@ transformed_df = (
     .filter(F.col("p_date").between(partition_start_date, partition_end_date))
     .filter(F.col("team_id").isNotNull())
     .dropDuplicates(["team_id"])
+    .transform(select_input_columns)
     .transform(add_validation_flags)
     .transform(add_validation_error_columns)
 )

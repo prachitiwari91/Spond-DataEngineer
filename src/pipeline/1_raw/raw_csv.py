@@ -6,7 +6,7 @@ import logging
 
 env = "dev"
 first_load = True
-common_path = "dbfs:/spond/data/"
+common_path = "<path_to_your_csv_files>" # Update this to your actual path
 db = "spond_raw"
 
 
@@ -129,9 +129,9 @@ load_data("event_rsvps.csv", "RESPONDED_AT", event_rsvps_schema, "raw_events_rsv
 df_geo = (
     spark.read.option("header", "true")
     .option("inferSchema", "true")
-    .csv(f"{common_path}geo.csv")
+    .csv(f"{common_path}geo_region_bounding_box.csv")
 )
-write_to_delta(df_geo, "d_geo_looker")
+df_geo.write.format("delta").mode("overwrite").saveAsTable("spond_analytics.d_geo_looker")
 
 # COMMAND ----------
 

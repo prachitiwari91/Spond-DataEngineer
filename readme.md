@@ -9,6 +9,7 @@ This repository presents a data pipeline solution simulating a data platform for
 ## Project Structure
 
 ```
+data/                     # CSV File for Geo Region Bounding Box
 src/
 └── pipeline/
     ├── 1_raw/            # Data ingestion from PostgreSQL/CSV into Delta Lake
@@ -36,11 +37,16 @@ src/
 
 2. **Set Job Parameters**
    In each notebook/script, configure:
+   
    ```python
-   env = "dev"
-   src_db = "src_db"
-   tgt_db = "spond_raw"  # or clean/analytics depending on the layer
+   env= 'dev'
+   src_db='spond_raw'  # or clean/analytics depending on the layer
+   tgt_db='spond_clean'  # or clean/analytics depending on the layer
+   partition_start_date = '2024-01-01' # Actual dates
+   partition_end_date = '2025-03-30' # Actual dates
+   first_load=True # For first load: True, subsequent loads: False
    ```
+   > For raw_csv, Update the path for CSV File, `common_path = "<path_to_your_csv_files>"`.
 
 3. **Run Notebooks in Order**
 

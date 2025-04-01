@@ -3,7 +3,7 @@ from pyspark.sql import functions as F
 
 # COMMAND ----------
 
-# TO DO : Define as job parameter
+# TO DO: Define as job parameter
 env= 'dev'
 src_db='spond_raw'
 tgt_db='spond_clean'

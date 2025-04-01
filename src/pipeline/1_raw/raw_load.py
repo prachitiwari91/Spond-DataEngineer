@@ -17,13 +17,6 @@ def get_yesterday_str():
 
 # Set these manually when running locally
 # ToDo: Create databricks job level paramters to be set from the job/dag
-env = 'dev'
-src_db = 'src_db'
-tgt_db = 'spond_raw'
-first_load = True  # Set False for daily DAG
-partition_start_date = '2024-01-01'  # or get_yesterday_str()
-partition_end_date = '2025-03-30'    # or get_yesterday_str()
-
 env = "dev"
 src_db = "src_db"
 tgt_db = "spond_raw"

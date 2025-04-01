@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 
 # Set your common path here
-common_path = "dbfs:/spond/data/"  # Example, update to your actual path
+common_path = "<path_to_your_csv_files>" # Update this to your actual path
 
 db = 'spond_raw'  # Example, update to your actual path
 
